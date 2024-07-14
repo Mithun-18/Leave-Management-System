@@ -14,17 +14,31 @@
 
 <body>
     <div class="container d-flex flex-column justify-content-center align-items-center" style="height: 100vh">
+
         <form action="./" method="POST">
             {% csrf_token %}
+
+            {% if data.error  %}                
+                <div class="alert alert-danger alert-dismissible fade show mb-0" role="alert" style="width: 540px;">
+                    <strong>
+                        {{data.error}}
+                    </strong> Please try again.
+                    <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div style="height: 24px;"></div>
+            {% endif %}
+            
             <div class="card text-center" style="width: 540px;">
                 <div class="card-header bg-primary text-light py-3 h4">Login</div>
                 <div class="card-body" style="padding: 32px 24px;">
                     <div class="form-group">
-                        <input type="" class="form-control" id="user_id" placeholder="User Id">
+                        <input type="text" name="userid" class="form-control" id="user_id" placeholder="User Id" required>
                     </div>
                     <div style="height: 16px;"></div>
                     <div class="form-group">
-                        <input type="password" class="form-control" id="user_password" placeholder="Password">
+                        <input type="password" name="password" class="form-control" id="user_password" placeholder="Password" required>
                     </div>
                 </div>
                 <div class="card-footer">
