@@ -4,17 +4,37 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Leave ManageMent</title>
+    <title>Leave tracker</title>
     <script src="{% static 'assets/jquery.slim.min.js' %}"></script>
     <script src="{% static 'assets/bootstrap.min.js' %}"></script>
     <link rel="stylesheet" href="{% static "assets/bootstrap.min.css" %}" />
     <link rel="stylesheet" href="{% static "assets/custom.css" %}" />
+    <style>
+      label {
+        float: left;
+        font-weight: 600;
+      }
+      .leave_card {
+        width: 18rem;
+      }
+      .add_leave_card {
+        width: 38rem;
+      }
+      @media only screen and (max-width: 620px) {
+        .add_leave_card {
+          width: 400px !important;
+        }
+        .leave_card {
+          width: 400px;
+        }
+      }
+    </style>
   </head>
   <body>
-    <h3 class="bg-primary text-center p-3 text-light">Leave Management</h3>
+    <h3 class="bg-primary text-center p-3 text-light">Leave Tracker</h3>
     <div class="p-4">
-      <div class="row justify-content-center" style="gap: 32px">
-        <div class="card" style="width: 18rem">
+      <div class="row justify-content-center" style="gap: 24px">
+        <div class="card leave_card">
           <div
             class="card-body d-flex flex-column justify-content-center align-items-center alert-success text-dark"
           >
@@ -28,7 +48,7 @@
             </button>
           </div>
         </div>
-        <div class="card" style="width: 18rem">
+        <div class="card leave_card">
           <div
             class="card-body d-flex flex-column justify-content-center align-items-center alert-danger text-dark"
           >
@@ -40,6 +60,80 @@
               view
             </button>
           </div>
+        </div>
+      </div>
+      <div class="row pt-4">
+        <div class="col" align="center">
+          <form action="." method="POST">
+            {% csrf_token %}
+            <div class="card add_leave_card">
+              <div class="card-header h5">Apply Leave</div>
+              <div class="card-body">
+                <div class="row">
+                  <div class="col col-6">
+                    <div class="form-group">
+                      <label for="date_from">From date:</label
+                      ><input
+                        type="date"
+                        name="date_from"
+                        id="date_from"
+                        style="width: 100%"
+                      />
+                    </div>
+                  </div>
+                  <div class="col col-6">
+                    <div class="form-group">
+                      <label for="date_to">To date:</label>
+                      <input
+                        type="date"
+                        name="date_to"
+                        id="date_to"
+                        style="width: 100%"
+                      />
+                    </div>
+                  </div>
+                  <div class="col col-6">
+                    <div class="d-flex flex-column align-items-center">
+                      <div style="width: 100%"><label>Leave type:</label></div>
+                      <div class="d-flex" style="gap: 32px">
+                        <div>
+                          <input
+                            type="radio"
+                            name="leave_type"
+                            value="sick"
+                          /><span class="pl-2">Sick</span>
+                        </div>
+                        <div>
+                          <input
+                            type="radio"
+                            name="leave_type"
+                            value="other"
+                          /><span class="pl-2">Other</span>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+                <div class="row">
+                  <div class="col form-group pt-3">
+                    <label for="exampleFormControlTextarea1">Reason</label>
+                    <textarea
+                      class="form-control"
+                      id="reason"
+                      rows="3"
+                    ></textarea>
+                  </div>
+                </div>
+                <button
+                  type="submit"
+                  class="btn btn-info"
+                  style="float: right; width: 160px"
+                >
+                  Submit
+                </button>
+              </div>
+            </div>
+          </form>
         </div>
       </div>
     </div>
