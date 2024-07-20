@@ -5,7 +5,7 @@ from .models import User
 from django.core.exceptions import ObjectDoesNotExist
 from .models import Students
 from django.contrib import messages
-import datetime
+from datetime import datetime
 
 # Create your views here.
 def login(request):
@@ -41,11 +41,12 @@ def home(request):
                 user_id = request.session['user_session']['userid']
                 leave_type = request.POST['leave_type']
                 reason = request.POST['reason'] 
-                Students.objects.create(user_id=user_id,date_from=date_from,date_to=date_to,leave_type=leave_type,reason=reason)
+                total_days=abs((datetime.strptime(date_to, '%Y-%m-%d') - datetime.strptime(date_from, '%Y-%m-%d')).days)+1
+                Students.objects.create(user_id=user_id,date_from=date_from,date_to=date_to,leave_type=leave_type,total_days=total_days,reason=reason)
                 messages.add_message(request, messages.SUCCESS, "Leave added successfully!")  
             except Exception as ex:
                 print(ex,user_id)
-            return redirect('/')
+            return  redirect('/')
         else: 
             total_leaves=Students.objects.filter(user_id=request.session['user_session']['userid'],status='Approved').count()
             total_leaves_sick=Students.objects.filter(user_id=request.session['user_session']['userid'],status='Approved',leave_type='sick').count()

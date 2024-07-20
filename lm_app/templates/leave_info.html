@@ -1,7 +1,10 @@
 {% include "./common/header.html" %}
 <div class="d-flex justify-content-center p-4">
   <div class="card" style="width: 48rem">
-    <h5 class="card-header">{{status}} leaves</h5>
+    <div class="card-header d-flex" style='align-items:baseline'>
+      <a href='/' class='btn btn-outline-primary btn-sm'>Back</a>
+      <h5 style='width:calc(100% - 80px); text-align:center;'> {{status}} leaves</h5>
+    </div>
     <div class="card-body">
       <div class="row px-3">
         {% for d in data %}
@@ -13,7 +16,7 @@
                   <h6>Type: {{d.leave_type}}</h6>
                 </div>
                 <div class="col col4">
-                  <h6>Total days:</h6>
+                  <h6>Total days: {{d.total_days}}</h6>
                 </div>
               </div>
               <div class="row">
@@ -26,7 +29,8 @@
               </div>
               <div class="row">
                 <div class="col">
-                  <h6>Reason:</h6> <h6>&nbsp;&nbsp;&nbsp;&nbsp;{{d.reason}}</h6>
+                  <h6>Reason:</h6>
+                  <h6>&nbsp;&nbsp;&nbsp;&nbsp;{{d.reason}}</h6>
                 </div>
               </div>
             </div>

@@ -14,6 +14,7 @@ class Students(models.Model):
     date_to=models.DateField()
     leave_type=models.CharField(max_length=8)
     reason=models.TextField(max_length=200)
+    total_days=models.IntegerField()
     status=models.CharField(max_length=12,default='Pending')
     
     def __str__(self) -> str:

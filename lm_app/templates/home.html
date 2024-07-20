@@ -5,6 +5,19 @@
           cursor: default;
         }
       </style>
+      <script>
+        $(document).ready(()=>{
+          let todayDate = new Date()
+          $("#date_from").attr('min', todayDate.toISOString().split('T')[0]);
+
+          $("#date_from").on('change', function(evt){
+            console.log($(this).val());
+            $("#date_to").attr('min', $(this).val());
+            $("#date_to").val($(this).val());
+            $("#date_to").attr('disabled', false);
+          });
+        });
+      </script>
       <div class="row justify-content-center p-4" style="gap: 24px">
         <div class="card leave_card">
           <div
@@ -15,7 +28,7 @@
             <h5>Others: {{data.total_leaves_other}}</h5>
           </div>
           <div class="card-footer">
-            <a  type="button" class="btn btn-outline-info btn-block  {% if data.total_leaves == 0  %} disabled {% endif %}">
+            <a href="/leaves?type=Approved" type="button" class="btn btn-outline-info btn-block  {% if data.total_leaves == 0  %} disabled {% endif %}">
               view
             </a>
           </div>
@@ -78,6 +91,7 @@
                         id="date_from"
                         style="width: 100%"
                         required
+                        onkeydown="return false"
                       />
                     </div>
                   </div>
@@ -90,6 +104,8 @@
                         id="date_to"
                         style="width: 100%"
                         required
+                        disabled
+                        onkeydown="return false"
                       />
                     </div>
                   </div>
