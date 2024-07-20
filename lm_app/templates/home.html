@@ -1,72 +1,71 @@
-{% load static %}
-<!DOCTYPE html>
-<html lang="en">
-  <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Leave tracker</title>
-    <script src="{% static 'assets/jquery.slim.min.js' %}"></script>
-    <script src="{% static 'assets/bootstrap.min.js' %}"></script>
-    <link rel="stylesheet" href="{% static "assets/bootstrap.min.css" %}" />
-    <link rel="stylesheet" href="{% static "assets/custom.css" %}" />
-    <style>
-      label {
-        float: left;
-        font-weight: 600;
-      }
-      .leave_card {
-        width: 18rem;
-      }
-      .add_leave_card {
-        width: 38rem;
-      }
-      @media only screen and (max-width: 620px) {
-        .add_leave_card {
-          width: 400px !important;
+{% include "./common/header.html" %}
+      <style>
+        a.disabled {
+          pointer-events: none;
+          cursor: default;
         }
-        .leave_card {
-          width: 400px;
-        }
-      }
-    </style>
-  </head>
-  <body>
-    <h3 class="bg-primary text-center p-3 text-light">Leave Tracker</h3>
-    <div class="p-4">
-      <div class="row justify-content-center" style="gap: 24px">
+      </style>
+      <div class="row justify-content-center p-4" style="gap: 24px">
         <div class="card leave_card">
           <div
             class="card-body d-flex flex-column justify-content-center align-items-center alert-success text-dark"
           >
-            <h4>Total leaves: 8</h4>
-            <h5>Sick: 8</h5>
-            <h5>Others: 8</h5>
+            <h4>Total leaves: {{data.total_leaves}}</h4>
+            <h5>Sick: {{data.total_leaves_sick}}</h5>
+            <h5>Others: {{data.total_leaves_other}}</h5>
           </div>
           <div class="card-footer">
-            <button type="button" class="btn btn-outline-info btn-block">
+            <a  type="button" class="btn btn-outline-info btn-block  {% if data.total_leaves == 0  %} disabled {% endif %}">
               view
-            </button>
+            </a>
+          </div>
+        </div>
+        <div class="card leave_card">
+          <div
+            class="card-body d-flex flex-column justify-content-ce%nter align-items-center alert-warning text-dark"
+          >
+            <h4>Pending Requests</h4>
+            <h5>Total: {{data.total_pending_leaves}}</h5>
+          </div>
+          <div class="card-footer">
+            <a href="/leaves?type=Pending" type="button" class="btn btn-outline-info btn-block  {% if data.total_pending_leaves == 0  %} disabled {% endif %}">
+              view
+            </a>
           </div>
         </div>
         <div class="card leave_card">
           <div
             class="card-body d-flex flex-column justify-content-center align-items-center alert-danger text-dark"
           >
-            <h4>Pending Requests</h4>
-            <h5>Total: 8</h5>
+            <h4>Rejected Requests</h4>
+            <h5>Total: {{data.total_rejected_leaves}}</h5>
           </div>
           <div class="card-footer">
-            <button type="button" class="btn btn-outline-info btn-block">
+            <a href="/leaves?type=Rejected" type="button" class="btn btn-outline-info btn-block  {% if data.total_rejected_leaves == 0  %} disabled {% endif %}">
               view
-            </button>
+            </a>
           </div>
         </div>
       </div>
       <div class="row pt-4">
         <div class="col" align="center">
+
           <form action="." method="POST">
             {% csrf_token %}
+            {% if messages %}
+              {% for message in messages %}   
+                {% if message.tags == 'success' %}              
+                  <div style="width: 48rem;" class="alert alert-success alert-dismissible" role="alert">
+                    {{message}}  {{message.tags}}
+                    <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                      <span aria-hidden="true">&times;</span>
+                    </button>
+                  </div>                  
+                {% endif %}
+              {% endfor %}
+            {% endif %}
             <div class="card add_leave_card">
+              
               <div class="card-header h5">Apply Leave</div>
               <div class="card-body">
                 <div class="row">
@@ -124,7 +123,7 @@
                     <textarea
                       class="form-control"
                       id="reason"
-                      name='reason'
+                      name="reason"
                       rows="3"
                       required
                     ></textarea>
@@ -142,6 +141,5 @@
           </form>
         </div>
       </div>
-    </div>
   </body>
 </html>

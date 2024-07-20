@@ -1,0 +1,40 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Leave tracker</title>
+    <script src="{% static 'assets/jquery.slim.min.js' %}"></script>
+    <script src="{% static 'assets/bootstrap.min.js' %}"></script>
+    <link rel="stylesheet" href="{% static "assets/bootstrap.min.css" %}" />
+    <link rel="stylesheet" href="{% static "assets/custom.css" %}" />
+    <style>
+      label {
+        float: left;
+        font-weight: 600;
+      }
+      .leave_card {
+        width: 18rem;
+      }
+      .add_leave_card {
+        width: 48rem;
+      }
+      @media only screen and (max-width: 620px) {
+        .add_leave_card {
+          width: 400px !important;
+        }
+        .leave_card {
+          width: 400px;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <div
+      class="bg-primary p-3 text-light d-flex"
+      style="justify-content: space-between"
+    >
+      <h3 class="text-center" style="width: 100%">Leave Tracker</h3>
+      <a class="btn btn-outline-light" id="logout" href="/logout">Logout</a>
+    </div>
