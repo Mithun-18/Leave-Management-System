@@ -3,7 +3,8 @@ from django.db import models
 class User(models.Model):
     user_id =models.CharField(max_length=10)
     name =models.CharField(max_length=24)
-    password =models.TextField(max_length=128)
+    password =models.TextField(max_length=128)   
+    is_student=models.BooleanField(default=True)
     
     def __str__(self) -> str:
         return self.name
