@@ -18,7 +18,7 @@
     });
   });
 </script>
-<div class="row justify-content-center p-4" style="gap: 24px">
+<div class="row justify-content-center p-4 m-0" style="gap: 24px">
   <div class="card leave_card">
     <div
       class="card-body d-flex flex-column justify-content-center align-items-center alert-success text-dark"
@@ -72,14 +72,14 @@
     </div>
   </div>
 </div>
-<div class="row pt-4">
+<div class="row pt-4 m-0">
   <div class="col" align="center">
     <form action="." method="POST">
         {% csrf_token %}
         {% if messages %}
           {% for message in messages %}   
             {% if message.tags == 'success' %}              
-              <div style="width: 48rem;" class="alert alert-success alert-dismissible" role="alert">
+              <div class="alert alert-success alert-dismissible custom_primary_card" role="alert">
                 {{message}}  {{message.tags}}
                 <button type="button" class="close" data-dismiss="alert" aria-label="Close">
                   <span aria-hidden="true">&times;</span>
@@ -88,7 +88,7 @@
             {% endif %}
           {% endfor %}
         {% endif %}
-      <div class="card add_leave_card">
+      <div class="card custom_primary_card">
         <div class="card-header h5">Apply Leave</div>
         <div class="card-body">
           <div class="row">

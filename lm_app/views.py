@@ -2,7 +2,6 @@ from django.shortcuts import render,redirect
 from django.http import HttpResponse
 from django.shortcuts import render
 from .models import User
-from django.core.exceptions import ObjectDoesNotExist
 from .models import Students
 from django.contrib import messages
 from datetime import datetime
@@ -17,8 +16,11 @@ def login(request):
             user_id = request.POST['userid']
             pwd = request.POST['password']
             user = User.objects.get(user_id=user_id, password=pwd)
+            is_student_res=User.objects.filter(user_id=user_id).values('is_student')
+            is_student=is_student_res[0]['is_student']
+            print(is_student)
             if user:
-                request.session['user_session'] = {'userid':user.user_id}
+                request.session['user_session'] = {'userid':user.user_id,'is_student':is_student}
                 return redirect('/')
         except Exception as ex:
             return render(request,'login.html', {"data": {"error": "Invalid credentials!"}})
@@ -34,20 +36,17 @@ def logout(request):
     
 def home(request):
     if 'user_session' in request.session:
-        is_student=User.objects.filter(user_id=request.session['user_session']['userid']).values('is_student')
-        if  not is_student:
+        is_student=request.session['user_session']['is_student']
+        if   not is_student:
             total_approved_leaves=Students.objects.filter(status='Approved').count()
             total_rejected_leaves=Students.objects.filter(status='Rejected').count()
-            data=Students.objects.filter(status='Pending').values()
+            data=Students.objects.filter(status='Pending').values()       
+            for d in data:
+                name_set=User.objects.filter(user_id=d['user_id']).values('name')
+                name=name_set[0]['name']
+                d['name']=name
             return render(request,'home.html',{'data':data,'total_approved_leaves':total_approved_leaves,'total_rejected_leaves':total_rejected_leaves,'is_student':is_student})
-            
-            
-            
-            
-            
-            
-            
-            
+          
         else:              
             if(request.method=='POST'):
                 try:
@@ -62,6 +61,7 @@ def home(request):
                 except Exception as ex:
                     print(ex,user_id)
                 return  redirect('/')
+            
             else: 
                 total_leaves=Students.objects.filter(user_id=request.session['user_session']['userid'],status='Approved').count()
                 total_leaves_sick=Students.objects.filter(user_id=request.session['user_session']['userid'],status='Approved',leave_type='sick').count()
@@ -83,10 +83,45 @@ def home(request):
     
 def leave_info(request):
     status=request.GET['type']
-    if True:
+    is_student=request.session['user_session']['is_student']
+    
+    if   not is_student:
         data=Students.objects.filter(status=status).values()
-        return render(request,'leave_info.html',{'data':data,'status':status})
+        for d in data:
+            name_set=User.objects.filter(user_id=d['user_id']).values('name')
+            name=name_set[0]['name']
+            d['name']=name
+        return render(request,'leave_info.html',{'data':data,'status':status,'is_student':is_student})
     else:      
         user_id=request.session['user_session']['userid']
         data=Students.objects.filter(user_id=user_id,status=status).values()
-        return render(request,'leave_info.html',{'data':data,'status':status})
+        return render(request,'leave_info.html',{'data':data,'status':status,'is_student':is_student})
+    
+def action(request):
+    if request.method=='POST':
+        try:
+            status=request.POST['status']
+            id=request.POST['leave_id']
+            Students.objects.filter(id=id).update(status=status)
+        except Exception as ex:
+            return redirect('/')
+    return redirect('/')
+
+def cancel(request):
+    if 'user_session' in request.session:
+        is_student=request.session['user_session']['is_student']
+        if  is_student:
+            if request.method=='POST':
+                try:
+                    id=request.POST['leave_id']
+                    res=Students.objects.get(id=id)
+                    res.delete()
+                except Exception as ex:
+                    return redirect('/')
+                
+            total_pending_leaves=Students.objects.filter(user_id=request.session['user_session']['userid'],status='Pending').count()
+            if(total_pending_leaves):
+                return redirect("/leaves?type=Pending")
+            else:
+                return redirect('/')
+            

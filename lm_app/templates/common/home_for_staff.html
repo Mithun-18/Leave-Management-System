@@ -1,10 +1,10 @@
 {% include "./header.html" %}
-<div class="row justify-content-center p-4" style="gap: 24px">
+<div class="row justify-content-center p-4 m-0" style="gap: 24px">
   <div class="card leave_card">
     <div
       class="card-body d-flex flex-column justify-content-center align-items-center alert-success text-dark"
     >
-      <h4>Approved leaves: {{data.total_leaves}}</h4>
+      <h4>Approved leaves </h4>
       <h5>Total: {{total_approved_leaves}}</h5>
     </div>
     <div class="card-footer">
@@ -42,20 +42,21 @@
     </div>
     <div class="card-body">
       <div class="row px-3">
+        {% if data %}
         {% for d in data %}
-        <div class="col col-sm-12 col-md-6 col-lg-6 p-2">
+        <div class="col col-12 col-lg-6 p-2">
           <div class="card" style="height: 100%">
             <div class="card-body p-3">
               <div class="row">
-                <div class="col col1">
+                <div class="col col1 text-uppercase">
                   <h6>USN: {{d.user_id}}</h6>
                 </div>
-                <div class="col col4">
-                  <h6>Name: {{d.total_days}}</h6>
+                <div class="col col4 text-capitalize">
+                  <h6>Name: {{d.name}}</h6>
                 </div>
               </div>
               <div class="row">
-                <div class="col col1">
+                <div class="col col1 text-capitalize">
                   <h6>Type: {{d.leave_type}}</h6>
                 </div>
                 <div class="col col4">
@@ -79,9 +80,10 @@
             </div>
             <div class="card-footer d-flex" style="gap: 16px">
               <div style="width: 100%">
-                <form action="/action" method="POST">
-                  <input type="hidden" value="hdhhdh" name="leave_id" />
-                  <input type="hidden" value="Approved" name="submit_type" />
+                <form action="/action/" method="POST">
+                  {% csrf_token %}
+                  <input type="hidden" value={{d.id}} name="leave_id" />
+                  <input type="hidden" value="Approved" name="status" />
                   <button
                     type="submit"
                     class="btn btn-outline-success btn-block btn-sm"
@@ -91,9 +93,10 @@
                 </form>
               </div>
               <div style="width: 100%">
-                <form action="/action" method="POST">
-                  <input type="hidden" value="hdhhdh" name="leave_id" />
-                  <input type="hidden" value="Rejected" name="submit_type" />
+                <form action="/action/" method="POST">
+                  {% csrf_token %}
+                  <input type="hidden" value={{d.id}} name="leave_id" />
+                  <input type="hidden" value="Rejected" name="status" />
                   <button
                     type="submit"
                     class="btn btn-outline-danger btn-block btn-sm"
@@ -106,6 +109,9 @@
           </div>
         </div>
         {% endfor %}
+        {%else%}
+          <h6 class='text-capitalize text-center text-success' style='width:100%;'>no pending leaves</h6>
+        {% endif%}
       </div>
     </div>
   </div>
